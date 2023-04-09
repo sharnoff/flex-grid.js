@@ -241,6 +241,7 @@ class FlexGrid {
         if (numCols === 1) {
             this._columns[col].items.push({ element, dims })
             this._columns[col].height += itemHeight + this._padding
+            this._columns[col].after = null
         } else {
             let resetHeight = y + itemHeight + this._padding
 
