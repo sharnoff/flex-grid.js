@@ -180,7 +180,7 @@ class FlexGrid {
     // Resizes (or: initially sizes) the FlexGrid
     rescale() {
         let width = this._container.clientWidth;
-        
+
         if (this._width == width) {
             return
         }
@@ -200,7 +200,7 @@ class FlexGrid {
 
         let items = this._items
         this._items = []
-        
+
         for (let item of items) {
             this.addItemWithDims(item.element, item.dims);
         }
@@ -231,7 +231,7 @@ class FlexGrid {
     //    }
     addItemWithDims(element, dims) {
         let { col, numCols, cropHeight } = this._getLargestColumnRange(dims)
-        
+
         // If we're making this a multi-column item, we might need to stretch the component columns
         if (numCols > 1) {
             for (let i = 0; i < numCols; i++) {
@@ -334,7 +334,7 @@ class FlexGrid {
         let cropRanges = this._columns.map((_, index) => this._columnCropRange(index))
 
         // Optimization:
-        // 
+        //
         // Find the column that has the smallest ending crop range -- if a column we're looking at
         // starts after that end, then it cannot use any cropping to fit all of the other columns.
         let minEnd = Math.min(cropRanges.map(r => r.end))
@@ -346,7 +346,7 @@ class FlexGrid {
             let heightOfValid = null
 
             let cropRange = { start: cropRanges[col].start, end: cropRanges[col].end }
-            
+
             // See note above; not possible to construct a valid pair
             if (cropRange.start > minEnd) {
                 continue;
@@ -386,7 +386,7 @@ class FlexGrid {
                 // This solution is *almost* valid -- but we're not out of the woods yet. We still
                 // need to check that we aren't adding too many duplicate ranges on top of these
                 // columns.
-                
+
                 let c = this._columns[col]
                 let tooManyMulti = (c.after
                     // Only need to check 'c'; if this is valid and c has no items, neither does
@@ -395,7 +395,7 @@ class FlexGrid {
                     && c.after.start === col
                     && c.after.numCols === numCols
                     && c.after.seqCount === this._maxSequentialMulti)
-                
+
                 if (tooManyMulti) {
                     continue
                 }
@@ -442,7 +442,7 @@ class FlexGrid {
         }
     }
 
-    // Crops all of the items in the column so that the total height matches 
+    // Crops all of the items in the column so that the total height matches
     _cropColumnToHeight(c, height) {
         let col = this._columns[c]
 
