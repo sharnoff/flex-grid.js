@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Example flex-grid usage</title>
+    <script src="../flex-grid.js" async></script>
+    <script>
+        // pulled directly from https://sharnoff.io/photos/album/favorites
+        const itemData = [
+            { "src": "https://sharnoff.io/photos/img-file/sunstruck-magnolia?size=small", "dims": { "height": 866, "width": 577 } },
+            { "src": "https://sharnoff.io/photos/img-file/sparkling-water-with-iceplant?size=small", "dims": { "height": 577, "width": 866 } },
+            { "src": "https://sharnoff.io/photos/img-file/life-goes-by-1?size=small", "dims": { "height": 914, "width": 546 } },
+            { "src": "https://sharnoff.io/photos/img-file/bird-meets-sf?size=small", "dims": { "height": 513, "width": 973 } },
+            { "src": "https://sharnoff.io/photos/img-file/annas-garden?size=small", "dims": { "height": 577, "width": 865 } },
+            { "src": "https://sharnoff.io/photos/img-file/daisy-forest?size=small", "dims": { "height": 866, "width": 577 } },
+            { "src": "https://sharnoff.io/photos/img-file/yellow-rumped-warbler-hanging-out-1?size=small", "dims": { "height": 461, "width": 1083 } },
+            { "src": "https://sharnoff.io/photos/img-file/please-help-jesus-loves?size=small", "dims": { "height": 577, "width": 866 } },
+            { "src": "https://sharnoff.io/photos/img-file/hilltop-tree?size=small", "dims": { "height": 577, "width": 865 } },
+            { "src": "https://sharnoff.io/photos/img-file/catching-the-light?size=small", "dims": { "height": 916, "width": 545 } },
+            { "src": "https://sharnoff.io/photos/img-file/cat-in-the-headlights?size=small", "dims": { "height": 707, "width": 707 } },
+            { "src": "https://sharnoff.io/photos/img-file/skyline-gardens-gear?size=small", "dims": { "height": 865, "width": 577 } },
+            { "src": "https://sharnoff.io/photos/img-file/mountain-vulture?size=small", "dims": { "height": 530, "width": 942 } },
+            { "src": "https://sharnoff.io/photos/img-file/we-were-all-born-with-wings?size=small", "dims": { "height": 577, "width": 866 } },
+            { "src": "https://sharnoff.io/photos/img-file/chch-water-lily-1?size=small", "dims": { "height": 836, "width": 597 } },
+            { "src": "https://sharnoff.io/photos/img-file/cherry-plum-bee?size=small", "dims": { "height": 530, "width": 942 } },
+            { "src": "https://sharnoff.io/photos/img-file/perched-long-tailed-tit?size=small", "dims": { "height": 448, "width": 1115 } },
+            { "src": "https://sharnoff.io/photos/img-file/closer-than-they-appear?size=small", "dims": { "height": 577, "width": 865 } },
+            { "src": "https://sharnoff.io/photos/img-file/15-mph?size=small", "dims": { "height": 866, "width": 577 } },
+            { "src": "https://sharnoff.io/photos/img-file/stomp?size=small", "dims": { "height": 500, "width": 1000 } },
+            { "src": "https://sharnoff.io/photos/img-file/meadow-goose-2?size=small", "dims": { "height": 844, "width": 592 } },
+            { "src": "https://sharnoff.io/photos/img-file/sl-ayia-napa-cat-3?size=small", "dims": { "height": 577, "width": 866 } },
+            { "src": "https://sharnoff.io/photos/img-file/light-after-the-rain?size=small", "dims": { "height": 866, "width": 577 } },
+            { "src": "https://sharnoff.io/photos/img-file/terrace-lights?size=small", "dims": { "height": 500, "width": 1000 } },
+            { "src": "https://sharnoff.io/photos/img-file/nighttime-cycles?size=small", "dims": { "height": 577, "width": 866 } },
+            { "src": "https://sharnoff.io/photos/img-file/inattentive-monarch?size=small", "dims": { "height": 865, "width": 576 } },
+            { "src": "https://sharnoff.io/photos/img-file/sf-layers?size=small", "dims": { "height": 864, "width": 577 } },
+            { "src": "https://sharnoff.io/photos/img-file/moonlit-fish-cafe?size=small", "dims": { "height": 568, "width": 879 } },
+            { "src": "https://sharnoff.io/photos/img-file/shadows-on-empty-chairs?size=small", "dims": { "height": 530, "width": 942 } },
+            { "src": "https://sharnoff.io/photos/img-file/oak-tunnel-1?size=small", "dims": { "height": 866, "width": 577 } },
+            { "src": "https://sharnoff.io/photos/img-file/downtown-oaktown?size=small", "dims": { "height": 576, "width": 865 } },
+            { "src": "https://sharnoff.io/photos/img-file/flight-above-the-clouds?size=small", "dims": { "height": 489, "width": 1022 } },
+            { "src": "https://sharnoff.io/photos/img-file/shadow-of-flight?size=small", "dims": { "height": 530, "width": 942 } },
+            { "src": "https://sharnoff.io/photos/img-file/parks-rd?size=small", "dims": { "height": 576, "width": 865 } },
+            { "src": "https://sharnoff.io/photos/img-file/tree-fungus?size=small", "dims": { "height": 866, "width": 577 } },
+        ]
+
+        // Helper function to give a convenient API for building HTML elements.
+        // It's no jQuery, but it helps enough for what we need here.
+        function buildElement(tagName, attrs, children) {
+            let e = document.createElement(tagName)
+            for (const [key, value] of Object.entries(attrs)) {
+                e.setAttribute(key, value)
+            }
+            for (const c of children) {
+                e.appendChild(c)
+            }
+            return e
+        }
+
+        function makeItem(info) {
+            let element = buildElement('div', { class: "demo-photobox" }, [
+                buildElement('img', { src: info.src }, []),
+            ])
+
+            return { element, dims: info.dims }
+        }
+
+        window.addEventListener('load', (event) => {
+            let container = document.getElementById('demo-flex-grid')
+
+            let items = itemData.map(d => makeItem(d))
+
+            let maxWidthSlider = document.getElementById('demo-max-width')
+            container.style.maxWidth = `${parseInt(maxWidthSlider.value)}px`
+
+            let colWidthSlider = document.getElementById('demo-column-width')
+
+            let grid = new FlexGrid(container, items, {
+                minColumns: 1,
+                maxColumns: 10,
+                minColumnWidth: parseInt(colWidthSlider.value), // measured in pixels
+                padding: 5,                                     // measured in pixels
+                maxSequentialMulti: 2,
+                maxMultiColumnHeightMultiplier: 1.2,
+                // see docs of these fields for explanations.
+                maxColumnCrop: 0.05,
+                maxMultiCrop: 0.15,
+            })
+
+            for (const it of items) {
+                // Add the generated elements so that they're children of the container.
+                // Otherwise they won't be displayed.
+                container.appendChild(it.element)
+            }
+
+            window.onresize = () => {
+                grid.rescale()
+            }
+            // Demo sliders.
+            maxWidthSlider.oninput = function () {
+                container.style.maxWidth = `${parseInt(this.value)}px`
+                grid.rescale()
+            }
+            colWidthSlider.oninput = function () {
+                grid.setMinColumnWidth(parseInt(this.value))
+            }
+        })
+    </script>
+    <style>
+        #demo-flex-grid {
+            width: 100%;
+        }
+        .demo-photobox {
+            position: absolute;
+        }
+        .demo-photobox img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <code>container.maxWidth</code>:
+        <input id="demo-max-width" type="range" min="800", max="3000", value="1500">
+    </div>
+    <div>
+        <code>minColumnWidth</code>:
+        <input id="demo-column-width" type="range" min="100", max="500", value="200">
+    </div>
+    <div id="demo-flex-grid">
+        <!-- contents will be filled in on load -->
+    </div>
+</body>
+</html>
